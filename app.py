@@ -2,10 +2,7 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-# 유저 정보 저장
-users = {}
-
-# 상품 정보
+# 示例商品数据
 products = [
     {'id': 1, '이름': '롯데 아이시스', '가격': 4000, '재고': 10, '이미지': 'LOTTE Icis.jpg'},
     {'id': 2, '이름': 'OKF 옥수수수염차', '가격': 5000, '재고': 8, '이미지': 'OKF 옥수수수염차.jpg'},
@@ -20,6 +17,9 @@ products = [
     {'id': 11, '이름': '포카리 (캔)', '가격': 5000, '재고': 9, '이미지': '포카리스캔.png'},
     {'id': 12, '이름': '혜태 배', '가격': 4000, '재고': 8, '이미지': '혜태 배.jpg'}
 ]
+
+
+users = {}
 
 @app.route('/')
 def index():
@@ -38,15 +38,12 @@ def buy():
     username = data['username']
     product_id = data['product_id']
     pay_method = data['payment']
-
     if username not in users:
         return jsonify({'success': False, 'error': '사용자 로그인 필요'})
-
     for product in products:
         if product['id'] == product_id and product['재고'] > 0:
             product['재고'] -= 1
             return jsonify({'success': True, 'message': f'{pay_method} 결제 완료!'})
-
     return jsonify({'success': False, 'error': '재고 없음'})
 
 @app.route('/recycle', methods=['POST'])
@@ -62,18 +59,15 @@ def redeem():
     username = request.json['username']
     if username not in users:
         return jsonify({'success': False, 'message': '사용자 로그인 필요'})
-
-   # 정확한 이름으로 교환 대상 찾기
     water = next((p for p in products if p['이름'] == '몽베스트 생수'), None)
     if not water or water['재고'] <= 0:
-        return jsonify({'success': False, 'message': '몽베스트 생수 재고 없음'})
-
+        return jsonify({'success': False, 'message': '생수 재고 없음'})
     if users[username]['points'] >= 20:
         users[username]['points'] -= 20
         water['재고'] -= 1
         return jsonify({
             'success': True,
-            'message': '포인트 20점으로 몽베스트 생수 교환 완료!',
+            'message': '포인트 20점으로 생수 교환 완료!',
             'points': users[username]['points'],
             'stock': water['재고']
         })
@@ -87,6 +81,4 @@ def ranking():
     return render_template('ranking.html', rankings=rankings)
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
+    app.run()
