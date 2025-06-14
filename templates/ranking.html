@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>포인트 순위 - Waste Zero</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Waste Zero 포인트 순위</h1>
+    </div>
+
+    <div class="content">
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>사용자 이름</th>
+                    <th>포인트</th>
+                    <th>칭호</th> <!-- 新增 -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in rankings %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td>
+                        {% if loop.index == 1 %}
+                            🌍 지구 수호자
+                        {% elif loop.index <= 3 %}
+                            ♻️ 탄소 절감 챔피언
+                        {% elif loop.index <= 5 %}
+                            🧃 플라스틱 파괴자
+                        {% elif loop.index <= 10 %}
+                            🧤 분리수거 마스터
+                        {% else %}
+                            🌱 환경 새싹
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <a href="/" class="back-button">← 메인으로 돌아가기</a>
+    </div>
+
+</body>
+</html>

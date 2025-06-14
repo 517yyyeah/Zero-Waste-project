@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Waste Zero</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Waste Zero</h1>
+    </div>
+
+    <div class="content">
+    <div style="text-align:right; margin-bottom: 10px;">
+        <a href="/ranking" class="ranking-button">포인트 순위</a>
+    </div>
+
+        <label>사용자 이름: <input type="text" id="username"></label>
+        <button onclick="login()">로그인</button>
+        <p id="points">현재 포인트: 0</p >
+
+        <hr>
+        <h2>선택 가능한 음료</h2>
+        <div id="products" class="product-row">
+        {% for p in products %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename='images/' + p.이미지) }}" 
+                alt="{{ p.이름 }}" 
+                class="product-img">
+            <h3>{{ p.이름 }}</h3>
+            <p>가격: {{ p.가격 }}원</p >
+            <p>재고: <span id="stock-{{ p.id }}">{{ p.재고 }}</span></p >
+            <label>
+                결제 방식:
+                <select id="pay-{{ p.id }}">
+                    <option value="현금">현금</option>
+                    <option value="신용카드">신용카드</option>
+                </select>
+            </label>
+            <button onclick="buyProduct({{ p.id }})">구매</button>
+        </div>
+        {% endfor %}
+        </div>
+
+        <hr>
+        <h2>♻ 빈병 회수</h2>
+        <button onclick="recycleBottle()">빈병 회수 +1포인트</button>
+
+        <h2>🎁 포인트로 음료 교환 (20포인트로 몽베스트 생수 1병 교환 가능)</h2>
+        <button onclick="redeemDrink()">음료 교환</button>
+
+        <p id="message"></p >
+    </div>
+
+<script>
+// ↓ 아래는 그대로 유지 (JavaScript는 번역하지 않아도 됨)
+let currentUser = '';
+
+function login() {
+    const username = document.getElementById('username').value;
+    fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+    })
+    .then(res => res.json())
+    .then(data => {
+        currentUser = username;
+        document.getElementById('points').innerText = '현재 포인트: ' + data.points;
+    });
+}
+
+function buyProduct(id) {
+    const payment = document.getElementById(`pay-${id}`).value;
+    fetch('/buy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: currentUser, product_id: id, payment })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('message').innerText = data.message;
+            let stockEl = document.getElementById(`stock-${id}`);
+            stockEl.innerText = parseInt(stockEl.innerText) - 1;
+
+            // ✅ 使用自定义弹窗提示
+            showPopup("✅ 구매 성공! 음료를 꺼내주세요.");
+        } else {
+            alert(data.error);
+        }
+    });
+}
+
+function recycleBottle() {
+    fetch('/recycle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: currentUser })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('points').innerText = '현재 포인트: ' + data.points;
+        }
+    });
+}
+
+function redeemDrink() {
+    fetch('/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: currentUser })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('message').innerText = data.message;
+        if (data.success) {
+            document.getElementById('points').innerText = '현재 포인트: ' + data.points;
+            document.getElementById('stock-3').innerText = data.stock;
+        }
+    });
+}
+function showPopup(message) {
+    const popup = document.getElementById('popup');
+    popup.innerText = message;
+    popup.style.display = 'block';
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 2000);
+}
+<!-- ✅ 自定义弹窗容器 -->
+</script>
+<div id="popup" class="popup-box">✅ 구매 성공! 음료를 꺼내주세요.</div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+.popup-box {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    color: black;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    display: none;
+    font-weight: bold;
+    border: 2px solid #5ac8fa;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-image: url("/static/images/background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+/* 顶部标题栏：水蓝色 + 半透明 */
+.navbar {
+    background-color: rgba(90, 200, 250, 0.9);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* 内容整体容器加透明白底 */
+.content {
+    background-color: rgba(255, 255, 255, 0.4);  /* 白色 + 低透明度（更透明） */
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 1200px;
+}
+
+/* 按钮统一水蓝色 */
+button,
+.ranking-button,
+.back-button {
+    background-color: #5ac8fa;   /* 水蓝色 */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 柔和浅灰阴影 */
+    transition: background-color 0.2s ease;
+}
+
+button:hover,
+.ranking-button:hover,
+.back-button:hover {
+    background-color: #40b4e5;  /* Hover 时略深蓝 */
+}
+
+/* 商品卡片 */
+.product-card {
+    background-color: white;       /* 纯白背景 */
+    color: black;                  /* 黑色文字 */
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+    margin: 10px;
+}
+
+.product-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* 排行榜表格 */
+.ranking-table {
+    width: 60%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background-color: white;
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ranking-table th, .ranking-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+}
